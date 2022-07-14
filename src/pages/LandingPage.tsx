@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { getCityGeoCodes, getWeatherForcast } from '../api/WeatherRepository'
-import { useNavigate } from 'react-router-dom'
+import { getCityGeoCodes } from '../api/WeatherRepository'
 import { CityOption } from '../components/CityOption'
+import { css } from '@emotion/css'
 
 export interface ICity {
   name: string
@@ -10,54 +10,72 @@ export interface ICity {
   country: string
 }
 
+const containerStyle = css`
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  align-content: center;
+  background-image: url(https://img1.goodfon.com/wallpaper/nbig/f/43/nebo-tuchi-tekstura-forma.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+`
+
+const inputStyle = css`
+  width: 30rem;
+  height: 2rem;
+  border-radius: 2rem;
+  padding: 5px;
+  padding-left: 20px;
+`
+const itemContainerStyle = css`
+  width: 100%;
+  text-align: center;
+  padding-top: 10rem;
+`
+
+const buttonContainerStyle = css`
+  margin-top: 10px;
+`
+
+const buttonStyle = css`
+  color: white;
+  background-color: #1a61cb;
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  border-style: hidden;
+  font-weight: bold;
+  margin-top: 10px;
+`
+
+const foundCityContainer = css`
+  text-align: center;
+  margin-top: 20px;
+`
+
 export const LandingPage = () => {
-  const [city, setCity] = useState('')
+  const [searchPhrase, setSearchPhrase] = useState('')
   const [isError, setIsError] = useState(false)
   const [foundCities, setFoundCities] = useState<ICity[]>([])
-  const navigate = useNavigate()
+
   return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        alignItems: 'center',
-        alignContent: 'center',
-        backgroundImage:
-          'url(https://img1.goodfon.com/wallpaper/nbig/f/43/nebo-tuchi-tekstura-forma.jpg)',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      <div style={{ width: '100%', textAlign: 'center', paddingTop: '10rem' }}>
-        <h1>Weather Application</h1>
+    <div className={containerStyle}>
+      <div className={itemContainerStyle}>
+        <h1>Weather Forecast Application</h1>
         <input
           type='text'
           placeholder='search City'
-          onChange={(e) => setCity(e.target.value)}
-          value={city}
-          style={{
-            width: '30rem',
-            height: '2rem',
-            borderRadius: '2rem',
-            padding: '5px',
-            paddingLeft: '20px',
-          }}
+          onChange={(e) => setSearchPhrase(e.target.value)}
+          value={searchPhrase}
+          className={inputStyle}
         />
-        <div style={{ marginTop: '10px' }}>
+        <div className={buttonContainerStyle}>
           <button
-            style={{
-              color: 'white',
-              backgroundColor: '#1a61cb',
-              width: '120px',
-              height: '40px',
-              borderRadius: '10px',
-              borderStyle: 'hidden',
-              fontWeight: 'bold',
-            }}
-            disabled={city === ''}
+            className={buttonStyle}
+            disabled={searchPhrase === ''}
             onClick={async () => {
               try {
-                const cities = await getCityGeoCodes(city)
+                const cities = await getCityGeoCodes(searchPhrase)
                 if (!cities || cities.length === 0) {
                   setIsError(true)
                   setFoundCities([])
@@ -75,7 +93,7 @@ export const LandingPage = () => {
           </button>
         </div>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+      <div className={foundCityContainer}>
         {foundCities &&
           foundCities.map((city, index) => {
             return <CityOption city={city} key={index} />

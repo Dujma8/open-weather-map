@@ -4,6 +4,7 @@ import { DayWeatherForcast } from '../components/DayWeatherForcast'
 import Modal from 'react-modal'
 import { WeatherModal } from '../components/WeatherModal'
 import { IList, IWeatherDayObject, IWeatherRepport } from '../api/interfaces'
+import { css } from '@emotion/css'
 
 const customStyles = {
   content: {
@@ -19,6 +20,42 @@ const customStyles = {
     backgroundColor: '#ded9d9',
   },
 }
+
+const containerStyle = css`
+  width: 100vw;
+  min-height: 100vh;
+  align-items: center;
+  align-content: center;
+  background-image: url(https://img1.goodfon.com/wallpaper/nbig/f/43/nebo-tuchi-tekstura-forma.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+`
+
+const buttonStyle = css`
+  color: white;
+  background-color: #1a61cb;
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  border-style: hidden;
+  font-weight: bold;
+  margin-top: 10px;
+  position: absolute;
+  left: 30px;
+  top: 30px;
+`
+const cityNameContainerStyle = css`
+  padding-top: 30px;
+  text-align: center;
+`
+
+const cityNameStyle = css`
+  color: #c7c3c3;
+`
+const dayForcastContainer = css`
+  text-align: center;
+`
 
 interface IProps {
   weatherInfo: IWeatherRepport
@@ -48,7 +85,7 @@ const transformDataToWeatherObject = (data: IList[]) => {
 }
 const createDayForcastList = (weatherDayObject: IWeatherDayObject) => {
   const days = Object.keys(weatherDayObject)
-  const showDataForDays: any[] = []
+  const daysDataList: any[] = []
   days.map((day) => {
     const showData: any = {}
     showData.date = day
@@ -79,17 +116,17 @@ const createDayForcastList = (weatherDayObject: IWeatherDayObject) => {
     showData.humidity = humidity / dayData.length
     showData.maxTemp = maxTemp
     showData.minTemp = minTemp
-    showDataForDays.push(showData)
+    daysDataList.push(showData)
   })
 
-  return showDataForDays
+  return daysDataList
 }
 
 export const WeatherPage = (props: any) => {
   const location = useLocation()
   const navigation = useNavigate()
   const cityData = location.state as IProps
-  const [dayForcast, setDayForcast] = useState<any[]>()
+  const [daysForcastList, setDaysForcastList] = useState<any[]>()
   const [forcastObject, setForcastObject] = useState<any>()
   const [modalIsOpen, setIsOpen] = React.useState(false)
   const [selectedDay, setSelectedDay] = useState<string>()
@@ -106,34 +143,17 @@ export const WeatherPage = (props: any) => {
     const dayObject = transformDataToWeatherObject(cityData.weatherInfo.list)
     setForcastObject(dayObject)
     const days = createDayForcastList(dayObject)
-    setDayForcast(days)
+    setDaysForcastList(days)
   }, [])
 
-  if (!dayForcast) {
+  if (!daysForcastList) {
     return <div>LOADING</div>
   }
 
   return (
-    <div
-      style={{
-        width: '100vw',
-        minHeight: '100vh',
-        alignItems: 'center',
-        alignContent: 'center',
-        backgroundImage:
-          'url(https://img1.goodfon.com/wallpaper/nbig/f/43/nebo-tuchi-tekstura-forma.jpg)',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        position: 'relative',
-      }}
-    >
+    <div className={containerStyle}>
       {selectedDay && (
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel='Example Modal'
-        >
+        <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
           <WeatherModal
             forecastObject={forcastObject}
             selectedDay={selectedDay}
@@ -142,11 +162,11 @@ export const WeatherPage = (props: any) => {
         </Modal>
       )}
 
-      <div style={{ paddingTop: '30px', textAlign: 'center' }}>
-        <h1 style={{ color: '#c7c3c3' }}>{cityData.weatherInfo.city.name}</h1>
+      <div className={cityNameContainerStyle}>
+        <h1 className={cityNameStyle}>{cityData.weatherInfo.city.name}</h1>
       </div>
-      <div style={{ textAlign: 'center' }}>
-        {dayForcast.map((forecast, index) => {
+      <div className={dayForcastContainer}>
+        {daysForcastList.map((forecast, index) => {
           return (
             <DayWeatherForcast
               key={index}
@@ -157,21 +177,7 @@ export const WeatherPage = (props: any) => {
           )
         })}
       </div>
-      <button
-        style={{
-          position: 'absolute',
-          left: 30,
-          top: 30,
-          color: 'white',
-          backgroundColor: '#1a61cb',
-          width: '120px',
-          height: '40px',
-          borderRadius: '10px',
-          borderStyle: 'hidden',
-          fontWeight: 'bold',
-        }}
-        onClick={() => navigation('/')}
-      >
+      <button className={buttonStyle} onClick={() => navigation('/')}>
         Back
       </button>
     </div>

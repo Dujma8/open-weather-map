@@ -1,5 +1,6 @@
 import React from 'react'
 import { IShowData } from '../api/interfaces'
+import { css } from '@emotion/css'
 
 interface IProps {
   forecast: IShowData
@@ -7,88 +8,114 @@ interface IProps {
   selectDay: any
 }
 
+const ContainerStyle = css`
+  height: 440px;
+  width: 300px;
+  background-color: #c7c3c3;
+  opacity: 70%;
+  display: inline-block;
+  margin: 10px;
+  border-radius: 30px;
+  padding: 10px;
+`
+const containerDayStyle = css`
+  border-bottom: solid 1px;
+`
+const weekDayNameStyle = css`
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 0px;
+`
+
+const dateNameStyle = css`
+  margin-top: 0;
+  font-size: 0.8rem;
+`
+
+const tableStyle = css`
+  text-align: left;
+`
+
+const seeMoreBUttonStyle = css`
+  border-style: none;
+  background-color: #424141;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+`
+
+const tableLabelStyle = css`
+  margin-top: 5px;
+  font-weight: bold;
+`
+
+const tableValueStyle = css`
+  margin-top: 5px;
+`
+
 export const DayWeatherForcast = (props: IProps) => {
   const { forecast, openModal, selectDay } = props
   return (
-    <div
-      style={{
-        height: '440px',
-        width: '300px',
-        backgroundColor: '#c7c3c3',
-        opacity: '70%',
-        display: 'inline-block',
-        margin: '10px',
-        borderRadius: '30px',
-        padding: '10px',
-      }}
-    >
-      <div style={{ borderBottom: 'solid 1px' }}>
-        <p style={{ fontWeight: 'bold', fontSize: '1.5rem', marginBottom: '0px' }}>
-          {forecast.dayOfTheWeek}
-        </p>
-        <p style={{ marginTop: 0, fontSize: '0.8rem' }}>{forecast.date}</p>
+    <div className={ContainerStyle}>
+      <div className={containerDayStyle}>
+        <p className={weekDayNameStyle}>{forecast.dayOfTheWeek}</p>
+        <p className={dateNameStyle}>{forecast.date}</p>
       </div>
       <div>
-        <table style={{ textAlign: 'left' }}>
+        <table className={tableStyle}>
           <tbody>
-            <tr style={{ margin: 0 }}>
+            <tr>
               <td>
-                <p style={{ marginTop: 5, fontWeight: 'bold' }}>Morning temperature :</p>
+                <p className={tableLabelStyle}>Morning temperature :</p>
               </td>
               <td>
-                <p style={{ marginTop: 5 }}>{forecast.morningTemperature ?? ''} &deg;C </p>
+                <p className={tableValueStyle}>{forecast.morningTemperature ?? ''} &deg;C </p>
               </td>
             </tr>
             <tr>
               <td>
-                <p style={{ marginTop: 5, fontWeight: 'bold' }}>Day temperature :</p>
+                <p className={tableLabelStyle}>Day temperature :</p>
               </td>
               <td>
-                <p style={{ marginTop: 5 }}>{forecast.dayTemperature ?? ''} &deg;C </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p style={{ marginTop: 5, fontWeight: 'bold' }}>Night temperature :</p>
-              </td>
-              <td>
-                <p style={{ marginTop: 5 }}>{forecast.nightTemperature ?? ''} &deg;C </p>
+                <p className={tableValueStyle}>{forecast.dayTemperature ?? ''} &deg;C </p>
               </td>
             </tr>
             <tr>
               <td>
-                <p style={{ marginTop: 5, fontWeight: 'bold' }}>Min temperature :</p>
+                <p className={tableLabelStyle}>Night temperature :</p>
               </td>
               <td>
-                <p style={{ marginTop: 5 }}>{forecast.minTemp} &deg;C </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p style={{ marginTop: 5, fontWeight: 'bold' }}>Max temperature :</p>
-              </td>
-              <td>
-                <p style={{ marginTop: 5 }}>{forecast.maxTemp} &deg;C </p>
+                <p className={tableValueStyle}>{forecast.nightTemperature ?? ''} &deg;C </p>
               </td>
             </tr>
             <tr>
               <td>
-                <p style={{ marginTop: 5, fontWeight: 'bold' }}>Humidity :</p>
+                <p className={tableLabelStyle}>Min temperature :</p>
               </td>
               <td>
-                <p style={{ marginTop: 5 }}>{forecast.humidity.toFixed(2) ?? 0} %</p>
+                <p className={tableValueStyle}>{forecast.minTemp} &deg;C </p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p className={tableLabelStyle}>Max temperature :</p>
+              </td>
+              <td>
+                <p className={tableValueStyle}>{forecast.maxTemp} &deg;C </p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p className={tableLabelStyle}>Humidity :</p>
+              </td>
+              <td>
+                <p className={tableValueStyle}>{forecast.humidity.toFixed(2) ?? 0} %</p>
               </td>
             </tr>
           </tbody>
         </table>
         <button
-          style={{
-            borderStyle: 'none',
-            backgroundColor: '#424141',
-            color: 'white',
-            padding: '10px',
-            borderRadius: '5px',
-          }}
+          className={seeMoreBUttonStyle}
           onClick={() => {
             selectDay(forecast.date)
             openModal()

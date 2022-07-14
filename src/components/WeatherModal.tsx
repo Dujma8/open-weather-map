@@ -2,6 +2,7 @@ import React from 'react'
 import { getDayOfTheWeek } from '../pages/WeatherPage'
 import { HourlyWeatherContainer } from './HourlyWeatherContainer'
 import { IWeatherDayObject } from '../api/interfaces'
+import { css } from '@emotion/css'
 
 interface IModalProps {
   forecastObject: IWeatherDayObject
@@ -9,39 +10,51 @@ interface IModalProps {
   closeModal: any
 }
 
+const modalContainerStyle = css`
+  min-width: 600px;
+  min-height: 600px;
+`
+
+const containerStyle = css`
+  height: 100px;
+  width: 100%;
+`
+
+const dayLabelStyle = css`
+  margin-top: 6px;
+`
+
+const buttonStyle = css`
+  color: white;
+  background-color: #1a61cb;
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  border-style: hidden;
+  font-weight: bold;
+`
+
+const buttonContainerStyle = css`
+  text-align: center;
+`
+
 export const WeatherModal = (props: IModalProps) => {
   const { forecastObject, selectedDay, closeModal } = props
   const data = forecastObject[selectedDay]
 
   return (
-    <div
-      style={{
-        minWidth: '600px',
-        minHeight: '600px',
-      }}
-    >
-      <div style={{ height: '100px', width: '100%' }}>
+    <div className={modalContainerStyle}>
+      <div className={containerStyle}>
         <h1>{getDayOfTheWeek(data[0].dt)}</h1>
-        <p style={{ marginTop: '0px' }}>{selectedDay}</p>
+        <p className={dayLabelStyle}>{selectedDay}</p>
       </div>
       <div>
         {data.map((hour, index) => (
           <HourlyWeatherContainer hourData={hour} key={index} />
         ))}
       </div>
-      <div style={{ textAlign: 'center' }}>
-        <button
-          style={{
-            color: 'white',
-            backgroundColor: '#1a61cb',
-            width: '120px',
-            height: '40px',
-            borderRadius: '10px',
-            borderStyle: 'hidden',
-            fontWeight: 'bold',
-          }}
-          onClick={() => closeModal()}
-        >
+      <div className={buttonContainerStyle}>
+        <button className={buttonStyle} onClick={() => closeModal()}>
           Close
         </button>
       </div>
