@@ -1,6 +1,6 @@
 import React from 'react'
 import Collapsible from 'react-collapsible'
-import { IList } from '../pages/WeatherPage'
+import { IList } from '../api/interfaces'
 interface IHourContainer {
   hourData: IList
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { IShowData } from '../pages/WeatherPage'
+import { IShowData } from '../api/interfaces'
 
 interface IProps {
   forecast: IShowData

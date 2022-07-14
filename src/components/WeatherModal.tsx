@@ -1,7 +1,7 @@
 import React from 'react'
-import { getDayOfTheWeek, IWeatherDayObject } from '../pages/WeatherPage'
-import Collapsible from 'react-collapsible'
+import { getDayOfTheWeek } from '../pages/WeatherPage'
 import { HourlyWeatherContainer } from './HourlyWeatherContainer'
+import { IWeatherDayObject } from '../api/interfaces'
 
 interface IModalProps {
   forecastObject: IWeatherDayObject
