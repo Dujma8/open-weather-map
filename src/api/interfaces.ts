@@ -7,6 +7,11 @@ export interface IShowData {
   minTemp: number
   dayOfTheWeek: string
   date: string
+  modeHumidity: number[]
+  meanHumidity: number
+  averageHumidity: number
+  meanTemp: number
+  modeTemp: number[]
 }
 
 export interface IMain {

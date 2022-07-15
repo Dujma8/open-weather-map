@@ -7,7 +7,9 @@ import { css } from '@emotion/css'
 interface IModalProps {
   forecastObject: IWeatherDayObject
   selectedDay: string
-  closeModal: any
+  closeModal: () => void
+  tempMode: string
+  humidityMode: string
 }
 
 const modalContainerStyle = css`
@@ -38,8 +40,15 @@ const buttonContainerStyle = css`
   text-align: center;
 `
 
+const modeContainerStyle = css`
+  margin-bottom: 20px;
+`
+const modeLabelStyle = css`
+  font-weight: bold;
+`
+
 export const WeatherModal = (props: IModalProps) => {
-  const { forecastObject, selectedDay, closeModal } = props
+  const { forecastObject, selectedDay, closeModal, tempMode, humidityMode } = props
   const data = forecastObject[selectedDay]
 
   return (
@@ -49,6 +58,20 @@ export const WeatherModal = (props: IModalProps) => {
         <p className={dayLabelStyle}>{selectedDay}</p>
       </div>
       <div>
+        <div className={modeContainerStyle}>
+          <table>
+            <tbody>
+              <tr>
+                <td className={modeLabelStyle}>Temperature mode: </td>
+                <td>{tempMode}</td>
+              </tr>
+              <tr>
+                <td className={modeLabelStyle}>Humidity mode: </td>
+                <td>{humidityMode}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         {data.map((hour, index) => (
           <HourlyWeatherContainer hourData={hour} key={index} />
         ))}

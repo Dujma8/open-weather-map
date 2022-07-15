@@ -79,11 +79,11 @@ export const HourlyWeatherContainer = (props: IHourContainer) => {
       <div className={headderStyle}>
         <div className={iconContainerStyle}>
           <img src={weatherIcon} alt='' className={iconStyle} />
-          <p className={temperatureStyle}>{hourData.main.temp}&deg;C </p>
+          <p className={temperatureStyle}>{Math.floor(hourData.main.temp)}&deg;C </p>
         </div>
         <p className={timeStyle}>{time.slice(0, 5)}</p>
         <p className={feelsLikeLabelStyle}>Feels like: </p>
-        <p className={feelsLikeStyle}>{hourData.main.feels_like}&deg;C</p>
+        <p className={feelsLikeStyle}>{Math.floor(hourData.main.feels_like)}&deg;C</p>
         <div className={weatherDescriptionContainerStyle}>
           <p className={weatherDescriptionStyle}>{hourData.weather[0].description}</p>
         </div>
@@ -95,30 +95,32 @@ export const HourlyWeatherContainer = (props: IHourContainer) => {
       <Collapsible trigger={HeadderData}>
         <div>
           <table>
-            <tr>
-              <td>
-                <p className={tableLabelStyle}>Min temperature :</p>
-              </td>
-              <td>
-                <p className={tableValueStyle}>{hourData.main.temp_min} &deg;C </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p className={tableLabelStyle}>Max temperature :</p>
-              </td>
-              <td>
-                <p className={tableValueStyle}>{hourData.main.temp_max} &deg;C </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p className={tableLabelStyle}>Humidity :</p>
-              </td>
-              <td>
-                <p className={tableValueStyle}>{hourData.main.humidity.toFixed(2)}%</p>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>
+                  <p className={tableLabelStyle}>Min temperature :</p>
+                </td>
+                <td>
+                  <p className={tableValueStyle}>{Math.floor(hourData.main.temp_min)} &deg;C </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className={tableLabelStyle}>Max temperature :</p>
+                </td>
+                <td>
+                  <p className={tableValueStyle}>{Math.floor(hourData.main.temp_max)} &deg;C </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className={tableLabelStyle}>Humidity :</p>
+                </td>
+                <td>
+                  <p className={tableValueStyle}>{Math.floor(hourData.main.humidity)}%</p>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </Collapsible>

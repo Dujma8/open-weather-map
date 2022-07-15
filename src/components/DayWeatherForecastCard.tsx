@@ -4,12 +4,14 @@ import { css } from '@emotion/css'
 
 interface IProps {
   forecast: IShowData
-  openModal: any
-  selectDay: any
+  openModal: () => void
+  selectDay: (day: string) => void
+  setHumidityMode: (humidity: string) => void
+  setTempMode: (temp: string) => void
 }
 
 const ContainerStyle = css`
-  height: 440px;
+  height: 480px;
   width: 300px;
   background-color: #c7c3c3;
   opacity: 70%;
@@ -53,8 +55,8 @@ const tableValueStyle = css`
   margin-top: 5px;
 `
 
-export const DayWeatherForcast = (props: IProps) => {
-  const { forecast, openModal, selectDay } = props
+export const DayWeatherForecastCard = (props: IProps) => {
+  const { forecast, openModal, selectDay, setHumidityMode, setTempMode } = props
   return (
     <div className={ContainerStyle}>
       <div className={containerDayStyle}>
@@ -106,10 +108,26 @@ export const DayWeatherForcast = (props: IProps) => {
             </tr>
             <tr>
               <td>
-                <p className={tableLabelStyle}>Humidity :</p>
+                <p className={tableLabelStyle}>Mean Temperature :</p>
               </td>
               <td>
-                <p className={tableValueStyle}>{forecast.humidity.toFixed(2) ?? 0} %</p>
+                <p className={tableValueStyle}>{forecast.meanTemp.toFixed(2) ?? 0} &deg;C</p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p className={tableLabelStyle}> Average Humidity :</p>
+              </td>
+              <td>
+                <p className={tableValueStyle}>{forecast.averageHumidity.toFixed(2) ?? 0} %</p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p className={tableLabelStyle}>Mean Humidity :</p>
+              </td>
+              <td>
+                <p className={tableValueStyle}>{forecast.meanHumidity.toFixed(2) ?? 0} %</p>
               </td>
             </tr>
           </tbody>
@@ -117,7 +135,10 @@ export const DayWeatherForcast = (props: IProps) => {
         <button
           className={seeMoreBUttonStyle}
           onClick={() => {
+            setHumidityMode(forecast.modeHumidity.join())
+            setTempMode(forecast.modeTemp.join())
             selectDay(forecast.date)
+
             openModal()
           }}
         >

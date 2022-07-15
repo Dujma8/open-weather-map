@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { DayWeatherForcast } from '../components/DayWeatherForcast'
 import Modal from 'react-modal'
 import { WeatherModal } from '../components/WeatherModal'
 import { IList, IWeatherDayObject, IWeatherRepport } from '../api/interfaces'
 import { css } from '@emotion/css'
+import { mode, mean } from 'mathjs'
+import { DayWeatherForecastCard } from '../components/DayWeatherForecastCard'
 
 const customStyles = {
   content: {
@@ -90,32 +91,41 @@ const createDayForcastList = (weatherDayObject: IWeatherDayObject) => {
     const showData: any = {}
     showData.date = day
     const dayData = weatherDayObject[day]
-    let maxTemp = dayData[0].main.temp_max
-    let minTemp = dayData[0].main.temp_min
-    let humidity = dayData[0].main.humidity
+    let maxTemp = Math.floor(dayData[0].main.temp_max)
+    let minTemp = Math.floor(dayData[0].main.temp_min)
+    let humidity = Math.floor(dayData[0].main.humidity)
+    const humidityList: number[] = []
+    const tempList: number[] = []
 
     dayData.map((hour) => {
       showData.dayOfTheWeek = getDayOfTheWeek(hour.dt)
       const [date, time] = hour.dt_txt.split(' ')
       showData.date = date
-      humidity = humidity + hour.main.humidity
-      if (hour.main.temp_max > maxTemp) {
-        maxTemp = hour.main.temp_max
+      humidityList.push(Math.floor(hour.main.humidity))
+      tempList.push(Math.floor(hour.main.temp))
+      humidity = humidity + Math.floor(hour.main.humidity)
+      if (Math.floor(hour.main.temp_max) > maxTemp) {
+        maxTemp = Math.floor(hour.main.temp_max)
       }
-      if (hour.main.temp_min < minTemp) {
-        minTemp = hour.main.temp_min
+      if (Math.floor(hour.main.temp_min) < minTemp) {
+        minTemp = Math.floor(hour.main.temp_min)
       }
       if (time === '06:00:00') {
-        showData.morningTemperature = hour.main.temp
+        showData.morningTemperature = Math.floor(hour.main.temp)
       } else if (time === '12:00:00') {
-        showData.dayTemperature = hour.main.temp
+        showData.dayTemperature = Math.floor(hour.main.temp)
       } else if (time === '00:00:00') {
-        showData.nightTemperature = hour.main.temp
+        showData.nightTemperature = Math.floor(hour.main.temp)
       }
     })
-    showData.humidity = humidity / dayData.length
+    showData.averageHumidity = showData.humidity = humidity / dayData.length
+    showData.meanHumidity = mean(humidityList)
+    showData.modeHumidity = mode(humidityList)
+    showData.meanTemp = mean(tempList)
+    showData.modeTemp = mode(tempList)
     showData.maxTemp = maxTemp
     showData.minTemp = minTemp
+
     daysDataList.push(showData)
   })
 
@@ -130,6 +140,8 @@ export const WeatherPage = (props: any) => {
   const [forcastObject, setForcastObject] = useState<any>()
   const [modalIsOpen, setIsOpen] = React.useState(false)
   const [selectedDay, setSelectedDay] = useState<string>()
+  const [tempMode, setTempMode] = useState('')
+  const [humidityMode, setHumidityMode] = useState('')
 
   function openModal() {
     setIsOpen(true)
@@ -137,6 +149,9 @@ export const WeatherPage = (props: any) => {
 
   function closeModal() {
     setIsOpen(false)
+    setSelectedDay('')
+    setTempMode('')
+    setHumidityMode('')
   }
 
   useEffect(() => {
@@ -153,11 +168,18 @@ export const WeatherPage = (props: any) => {
   return (
     <div className={containerStyle}>
       {selectedDay && (
-        <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          ariaHideApp={false}
+        >
           <WeatherModal
             forecastObject={forcastObject}
             selectedDay={selectedDay}
             closeModal={closeModal}
+            tempMode={tempMode}
+            humidityMode={humidityMode}
           ></WeatherModal>
         </Modal>
       )}
@@ -166,13 +188,15 @@ export const WeatherPage = (props: any) => {
         <h1 className={cityNameStyle}>{cityData.weatherInfo.city.name}</h1>
       </div>
       <div className={dayForcastContainer}>
-        {daysForcastList.map((forecast, index) => {
+        {daysForcastList.slice(0, 5).map((forecast, index) => {
           return (
-            <DayWeatherForcast
+            <DayWeatherForecastCard
               key={index}
               forecast={forecast}
               openModal={openModal}
               selectDay={setSelectedDay}
+              setTempMode={setTempMode}
+              setHumidityMode={setHumidityMode}
             />
           )
         })}
