@@ -1,4 +1,5 @@
 # OPEN WEATHER MAP 
+application for searching weather reports for selected city
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
