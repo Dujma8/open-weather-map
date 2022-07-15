@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Collapsible from 'react-collapsible'
 import { IList } from '../api/interfaces'
 import { css } from '@emotion/css'
@@ -69,10 +69,16 @@ const feelsLikeLabelStyle = css`
   font-weight: bold;
 `
 
+const clickForMore = css`
+  font-size: 0.6rem;
+  color: '#727171';
+`
+
 export const HourlyWeatherContainer = (props: IHourContainer) => {
   const { hourData } = props
   const weatherIcon = `http://openweathermap.org/img/wn/${hourData.weather[0].icon}@2x.png`
   const [date, time] = hourData.dt_txt.split(' ')
+  const [isOpen, setIsOpen] = useState(false)
 
   const HeadderData = (
     <div>
@@ -86,13 +92,18 @@ export const HourlyWeatherContainer = (props: IHourContainer) => {
         <p className={feelsLikeStyle}>{Math.floor(hourData.main.feels_like)}&deg;C</p>
         <div className={weatherDescriptionContainerStyle}>
           <p className={weatherDescriptionStyle}>{hourData.weather[0].description}</p>
+          {!isOpen && <p className={clickForMore}>click for more</p>}
         </div>
       </div>
     </div>
   )
   return (
     <div className={containerStyle}>
-      <Collapsible trigger={HeadderData}>
+      <Collapsible
+        trigger={HeadderData}
+        onOpen={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
+      >
         <div>
           <table>
             <tbody>

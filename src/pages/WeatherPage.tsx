@@ -132,7 +132,7 @@ const createDayForcastList = (weatherDayObject: IWeatherDayObject) => {
   return daysDataList
 }
 
-export const WeatherPage = (props: any) => {
+export const WeatherPage = () => {
   const location = useLocation()
   const navigation = useNavigate()
   const cityData = location.state as IProps
